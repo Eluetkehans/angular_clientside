@@ -1,0 +1,32 @@
+{
+  "name": "single_resource",
+  "version": "0.1.0",
+  "description": "Proof of concept single resource REST API",
+  "main": "server.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha",
+    "start": "node server.js"
+  },
+  "author": "eluetkehans@msn.com",
+  "license": "MIT",
+  "devDependencies": {
+    "angular": "^1.4.6",
+    "chai": "^3.2.0",
+    "chai-http": "^1.0.0",
+    "gulp": "^3.9.0",
+    "jshint": "^2.8.0",
+    "mocha": "^2.3.2",
+    "webpack-stream": "^2.1.1"
+  },
+  "dependencies": {
+    "bcrypt": "^0.8.5",
+    "body-parser": "^1.14.0",
+    "eat": "^0.1.1",
+    "express": "^4.13.3",
+    "mongodb": "^2.0.43",
+    "mongoose": "^4.1.7"
+  }
+}

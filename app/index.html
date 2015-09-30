@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+
+<!-- data tag allows us to inculde things that will not be
+processed as html. -->
+<body data-ng-app="ipApp">
+  <!-- Avoid using div tags, look up an appropriate html 5 tag to allow
+  for screen reader compatibility-->
+    <main data-ng-controller="ipController">
+      <h1>Hello, {{greeting}}!</h1>
+      <input type="text" data-ng-model="greeting">
+      <p>This is an app that returns the ip addresses of people who visit.
+        Doesn't that sound super safe and secure?</p>
+    </main>
+      <script src="bundle.js"></script>
+</body>
+</html>
