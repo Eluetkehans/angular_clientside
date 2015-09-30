@@ -42,11 +42,11 @@ module.exports = function(app) {
         });
     };
 
-    $scope.removeIp = function(note) {
-      note.status = 'pending';
+    $scope.removeIp = function(ip) {
+      ip.status = 'pending';
       $http.delete('/api/ips/' + ip._id)
         .then(function() {
-          $scope.ips.splice($scope.notes.indexOf(ip), 1);
+          $scope.ips.splice($scope.ips.indexOf(ip), 1);
         }, function(res) {
           ip.status = 'failed';
           console.log(res);
