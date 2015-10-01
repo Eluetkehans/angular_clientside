@@ -7,6 +7,7 @@ mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost/ips_dev');
 // those tokens actually came from our server.
 process.env.APP_SECRET = process.env.APP_SECRET || 'setupanappsecretplease';
 
+app.use(express.static(__dirname + '/build'));
 var ipRouter = require(__dirname + "/routes/ip_route");
 var usersRouter = require(__dirname + '/routes/users_routes');
 var port = 3000;

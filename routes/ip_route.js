@@ -6,18 +6,19 @@ var ipRoute = module.exports = exports = express.Router();
 var handleError = require(__dirname + "/../lib/handel_error");
 
 ipRoute.get('/ips', function(req, res) {
-  ipLogger(req, res, function(req, res) {
+  // ipLogger(req, res, function(req, res) {
     Ip.find({}, function(err, data) {
-      if (err) console.log(err);
+      if (err) return handleError(err, data);
       res.json(data);
     });
-  });  
+  // });  
 });
 
 ipRoute.post('/ips', jsonParser, function(req, res) {
   var newIp = new Ip(req.body);
+  debugger;
   newIp.save(function(err, data) {
-    if (err) handleError(err, res);
+    if (err) return handleError(err, res);
     res.json(data);
   });
 });

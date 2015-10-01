@@ -1,4 +1,4 @@
 require('angular/angular');
 
-var ipApp = angular.module('ipApp', []);
-require('./ips/ips')(ipApp);
+var ipsApp = angular.module('ipsApp', []);
+require('./ips/ips')(ipsApp);

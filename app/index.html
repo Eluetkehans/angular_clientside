@@ -7,40 +7,40 @@
 
 <!-- data tag allows us to inculde things that will not be
 processed as html. -->
-<body data-ng-app="ipApp">
+<body data-ng-app="ipsApp">
   <!-- Avoid using div tags, look up an appropriate html 5 tag to allow
   for screen reader compatibility-->
-    <main data-ng-controller="ipController" data-ng-init="getAll()">
-      <h1>Hello, {{greeting}}!</h1>
-      <input type="text" data-ng-model="greeting">
-      <p>This is an app that returns the ip addresses of people who visit.
-        Doesn't that sound super safe and secure?</p>
+  <main data-ng-controller="ipController" data-ng-init="getAll()">
+    <h1>Hello, {{greeting}}!</h1>
+    <input type="text" data-ng-model="greeting">
+    <p>This is an app that returns the ip addresses of people who visit.
+      Doesn't that sound super safe and secure?</p>
 
-        <h1>Ip Visits:</h1>
-        <form name="newIpForm" data-ng-submit="createIp(newIp)">
-          <label for="ipBody">New Ip:
-            <input type="text" required data-ng-model="newIp.ipBody">
-          </label>
-          <button type="submit" data-ng-disabled="newIpForm.$invalid">
-            Frame your friends! Create a new Ip.
-          </button>
+    <h1>Ip Visits:</h1>
+    <form name="newIpForm" data-ng-submit="createIp(newIp)">
+      <label for="ipBody">New Ip:
+        <input type="text" required data-ng-model="newIp.ipBody">
+      </label>
+      <button type="submit" data-ng-disabled="newIpForm.$invalid">
+        Frame your friends! Create a new Ip.
+      </button>
+    </form>
+
+    <ul id="ipslist">
+      <li class="{{ip.status}}" data-ng-repeat="ip in ips">
+        <span data-ng-if="!ip.editing">{{ip.ipBody}}
+          <button data-ng-click="ip.editing = true">Edit</button>
+          <button data-ng-click="removeIp(ip)">Delete</button>
+        </span>
+        <form data-ng-if="ip.editing" name="{{'ipForm' + ip._id}}"
+          data-ng-submit="updateIp(ip)">
+          <input type="text" data-ng-model="ip.ipBody">
+          <button type="submit">Save Changes</button>
         </form>
-
-        <ul id="ipslist">
-          <li class="{{ip.status}}" data-ng-repeat="ip in ips">
-            <span data-ng-if="!ip.editing">{{ip.ipBody}}
-              <button data-ng-click="ip.editing = true">Edit</button>
-              <button data-ng-click="removeIp(ip)">Delete</button>
-            </span>
-            <form data-ng-if="ip.editing" name="{{'ipForm' + ip._id}}"
-              data-ng-submit="updateIp(ip)">
-              <input type="text" data-ng-model="ip.ipBody">
-              <button type="submit">Save Changes</button>
-            </form>
-            <button data-ng-if="!ip.editing" data-ng-click="ip.editing = false">X</button>
-          </li>
-        </ul>
-    </main>
-      <script src="bundle.js"></script>
+        <button data-ng-if="!ip.editing" data-ng-click="ip.editing = false">X</button>
+      </li>
+    </ul>
+  </main>
+    <script src="bundle.js"></script>
 </body>
 </html>
