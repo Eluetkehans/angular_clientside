@@ -18,14 +18,11 @@ module.exports = function(app) {
     // These functions don't necessarily make sense for this app, but for
     // the sake of proving concepts they are included.
     $scope.createIp = function(ip) {
-      debugger;
       $http.post('/api/ips', ip)
         .then(function(res) {
-          debugger;
           $scope.ips.push(res.data);
           $scope.newIp = null;
         }, function(res) {
-          debugger;
           console.log(res);
         });
     };
