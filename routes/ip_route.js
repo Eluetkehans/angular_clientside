@@ -7,11 +7,12 @@ var handleError = require(__dirname + "/../lib/handel_error");
 
 ipRoute.get('/ips', function(req, res) {
   ipLogger(req, res, function(req, res) {
-    Ip.find({}, function(err, data) {
-      if (err) return handleError(err, data);
-      res.json(data);
+    Ip.find({}, function(err, docs) {
+      debugger;
+      if (err) return handleError(err, docs);
+      res.json(docs);
     });
-  });  
+  });
 });
 
 ipRoute.post('/ips', jsonParser, function(req, res) {

@@ -37,7 +37,7 @@ processed as html. -->
           <input type="text" data-ng-model="ip.ipAddress">
           <button type="submit">Save Changes</button>
         </form>
-        <button data-ng-if="!ip.editing" data-ng-click="ip.editing = false">X</button>
+        <button data-ng-if="ip.editing" data-ng-click="ip.editing = false">X</button>
       </li>
     </ul>
   </main>
