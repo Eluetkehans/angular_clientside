@@ -39,5 +39,15 @@ describe('ips controller', function() {
       $httpBackend.flush();
       expect($scope.ips[0].ipAddress).toBe('test ip');
     });
+
+    it('should be able to create a new ip', function() {
+      $httpBackend.expectPOST('/api/ips', {ipAddress: 'send test ip'})
+        .respond(200, {_id: 1, ipAddress: 'test ip'});
+      $scope.newIp = {ipAddress: "0.0.0.0"};
+      $scope.createIp({ipAddress: 'send test ip'});
+      $httpBackend.flush();
+      expect($scope.ips[0].ipAddress).toBe('test ip');
+      expect($scope.newIp).toBe(null);
+    });
   });
 });
