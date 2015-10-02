@@ -1,7 +1,7 @@
 // the $scope string in front of the function allows it to be uglified
 // without causing problems
 module.exports = function(app) {
-  app.controller('ipController', ['$scope', '$http', function($scope, $http) {
+  app.controller('ipsController', ['$scope', '$http', function($scope, $http) {
     $scope.greeting = 'stranger';
     $scope.ips = [];
 

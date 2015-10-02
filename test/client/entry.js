@@ -1,0 +1,1 @@
+require(__dirname + '/ips_http_test.js');
