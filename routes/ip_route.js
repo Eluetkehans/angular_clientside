@@ -17,7 +17,6 @@ ipRoute.get('/ips', function(req, res) {
 
 ipRoute.post('/ips', jsonParser, function(req, res) {
   var newIp = new Ip(req.body);
-  debugger;
   newIp.save(function(err, data) {
     if (err) return handleError(err, res);
     res.json(data);
