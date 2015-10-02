@@ -28,8 +28,10 @@ processed as html. -->
 
     <ul id="ipslist">
       <li class="{{ip.status}}" data-ng-repeat="ip in ips">
-        <span data-ng-if="!ip.editing">{{ip.ipAddress}} Visits: {{ip.visits}}
-          <button data-ng-click="ip.editing = true">Edit</button>
+        <span data-ng-if="!ip.editing" data-ng-init="ip.ipOriginal = ip.ipAddress">{{ip.ipAddress}} Visits: {{ip.visits}}
+          <button data-ng-click="ip.editing = true">
+            Edit
+          </button>
           <button data-ng-click="removeIp(ip)">Delete</button>
         </span>
         <form data-ng-if="ip.editing" name="{{'ipForm' + ip._id}}"
@@ -37,7 +39,9 @@ processed as html. -->
           <input type="text" data-ng-model="ip.ipAddress">
           <button type="submit">Save Changes</button>
         </form>
-        <button data-ng-if="ip.editing" data-ng-click="ip.editing = false">X</button>
+        <button data-ng-if="ip.editing" data-ng-click="ip.editing = false; ip.ipAddress = ip.ipOriginal">
+          X
+        </button>
       </li>
     </ul>
   </main>
