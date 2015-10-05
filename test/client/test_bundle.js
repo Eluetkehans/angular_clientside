@@ -110,7 +110,15 @@
 	      $httpBackend.flush();
 	      expect($scope.ips[0].ipAddress).toBe('updated ip');
 	      expect($scope.ips[0].ipAddress.status).toBe(undefined);
+	    });
 
+	    it('should be able to remove and ip address', function() {
+	      $scope.ips[0] = {_id: 1, ipAddress: 'delete test'};
+	      $httpBackend.expectDELETE('/api/ips/1')
+	        .respond(200, {msg: 'success'});
+	      $scope.removeIp($scope.ips[0]);
+	      $httpBackend.flush();
+	      expect($scope.ips[0]).toBe(undefined);
 	    });
 	  });
 	});
