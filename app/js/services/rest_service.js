@@ -1,7 +1,6 @@
 // Create two helper functions so we can create a node like interface
 var handleSuccess = function(callback) {
   return function(res) {
-    debugger;
     callback(null, res.data);
   };
 };
@@ -19,8 +18,7 @@ module.exports = function(app) {
     };
 
     Resource.prototype.create = function(resource, callback) {
-      debugger;
-      $http.post('/api/' + this.resourceName)
+      $http.post('/api/' + this.resourceName, resource)
         .then(handleSuccess(callback), handleFailure(callback));
     };
 
@@ -30,7 +28,7 @@ module.exports = function(app) {
     };
 
     Resource.prototype.update = function(resource, callback) {
-      $http.put('/api/' + this.resourceName + '/' + resource._id)
+      $http.put('/api/' + this.resourceName + '/' + resource._id, resource)
         .then(handleSuccess(callback), handleFailure(callback));
     };
 
