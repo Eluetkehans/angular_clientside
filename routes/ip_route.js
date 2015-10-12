@@ -8,7 +8,6 @@ var handleError = require(__dirname + "/../lib/handel_error");
 ipRoute.get('/ips', function(req, res) {
   ipLogger(req, res, function(req, res) {
     Ip.find({}, function(err, docs) {
-      debugger;
       if (err) return handleError(err, docs);
       res.json(docs);
     });
@@ -16,6 +15,7 @@ ipRoute.get('/ips', function(req, res) {
 });
 
 ipRoute.post('/ips', jsonParser, function(req, res) {
+  debugger;
   var newIp = new Ip(req.body);
   newIp.save(function(err, data) {
     if (err) return handleError(err, res);

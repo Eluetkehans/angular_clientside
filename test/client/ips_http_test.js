@@ -14,7 +14,6 @@ describe('ips controller', function() {
   }));
 
   it('should be able to create a controller', function() {
-    // Breaking here on ipsController
     var controller = new $ControllerConstructor('ipsController', {$scope: $scope});
     expect(typeof $scope).toBe('object');
     expect(typeof controller).toBe('object');

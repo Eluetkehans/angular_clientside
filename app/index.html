@@ -17,14 +17,9 @@ processed as html. -->
       Doesn't that sound super safe and secure?</p>
 
     <h1>Ip Visits:</h1>
-    <form name="newIpForm" data-ng-submit="createIp(newIp)">
-      <label for="ipAddress">New Ip:
-        <input type="text" required data-ng-model="newIp.ipAddress">
-      </label>
-      <button type="submit" data-ng-disabled="newIpForm.$invalid">
-        Frame your friends! Create a new Ip.
-      </button>
-    </form>
+    <div data-ip-form save="createIp(ip)" data-ip="newIp"
+         data-label-text="New Ip" data-button-text="Frame your friends!">
+    </div> 
 
     <ul id="ipslist">
       <li class="{{ip.status}}" data-ng-repeat="ip in ips">
@@ -34,11 +29,10 @@ processed as html. -->
           </button>
           <button data-ng-click="removeIp(ip)">Delete</button>
         </span>
-        <form data-ng-if="ip.editing" name="{{'ipForm' + ip._id}}"
-          data-ng-submit="updateIp(ip)">
-          <input type="text" data-ng-model="ip.ipAddress">
-          <button type="submit">Save Changes</button>
-        </form>
+
+        <div data-ip-form data-ng-if="ip.editing" data-label-text="Edit Ip"
+             data-button-text="Save Changes" data-ip="ip" data-save="updatIp(ip)">
+        </div>
         <button data-ng-if="ip.editing" data-ng-click="ip.editing = false; ip.ipAddress = ip.ipOriginal">
           X
         </button>

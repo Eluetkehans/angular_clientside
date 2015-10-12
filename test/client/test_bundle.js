@@ -45,13 +45,14 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
+	__webpack_require__(9);
 
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(2);
-	__webpack_require__(6);
+	__webpack_require__(8);
 
 	describe('ips controller', function() {
 	  var $httpBackend;
@@ -66,7 +67,6 @@
 	  }));
 
 	  it('should be able to create a controller', function() {
-	    // Breaking here on ipsController
 	    var controller = new $ControllerConstructor('ipsController', {$scope: $scope});
 	    expect(typeof $scope).toBe('object');
 	    expect(typeof controller).toBe('object');
@@ -130,7 +130,10 @@
 	__webpack_require__(3);
 
 	var ipsApp = angular.module('ipsApp', []);
+
+	// Order matters. Services, directives, then resources
 	__webpack_require__(4)(ipsApp);
+	__webpack_require__(6)(ipsApp);
 
 /***/ },
 /* 3 */
@@ -28975,65 +28978,106 @@
 /* 5 */
 /***/ function(module, exports) {
 
-	// the $scope string in front of the function allows it to be uglified
-	// without causing problems
+	// Create two helper functions so we can create a node like interface
+	var handleSuccess = function(callback) {
+	  return function(res) {
+	    callback(null, res.data);
+	  };
+	};
+
+	var handleFailure = function(callback) {
+	  return function(data) {
+	    callback(data);
+	  };
+	};
+
 	module.exports = function(app) {
-	  app.controller('ipsController', ['$scope', '$http', function($scope, $http) {
-	    $scope.greeting = 'stranger';
-	    $scope.ips = [];
-
-	    $scope.getAll = function() {
-	      $http.get('/api/ips')
-	        //takes a callback for success, then a callback for failure
-	        .then(function(res) {
-	          $scope.ips = res.data;
-	        }, function(res) {
-	          console.log(res);
-	        });
+	  app.factory('Resource', ['$http', function($http) {
+	    var Resource = function(resourceName) {
+	      this.resourceName = resourceName;
 	    };
 
-	    // These functions don't necessarily make sense for this app, but for
-	    // the sake of proving concepts they are included.
-	    $scope.createIp = function(ip) {
-	      $http.post('/api/ips', ip)
-	        .then(function(res) {
-	          $scope.ips.push(res.data);
-	          $scope.newIp = null;
-	        }, function(res) {
-	          console.log(res);
-	        });
+	    Resource.prototype.create = function(resource, callback) {
+	      $http.post('/api/' + this.resourceName)
+	        .then(handleSuccess(callback), handleFailure(callback));
 	    };
 
-	    $scope.updateIp = function(ip) {
-	      // use css on pending to give users instant feedback that something
-	      // is happening
-	      ip.status = 'pending';
-	      $http.put('/api/ips/' + ip._id, ip)
-	        .then(function(res) {
-	          delete ip.status;
-	          ip.editing = false;
-	        }, function(res) {
-	          console.log(res);
-	          ip.status = 'failed';
-	          ip.editing = false;
-	        });
+	    Resource.prototype.getAll = function(callback) {
+	      $http.get('/api/' + this.resourceName)
+	        .then(handleSuccess(callback), handleFailure(callback));
 	    };
 
-	    $scope.removeIp = function(ip) {
-	      ip.status = 'pending';
-	      $http.delete('/api/ips/' + ip._id)
-	        .then(function() {
-	          $scope.ips.splice($scope.ips.indexOf(ip), 1);
-	        }, function(res) {
-	          ip.status = 'failed';
-	          console.log(res);
-	        });
+	    Resource.prototype.update = function(resource, callback) {
+	      $http.put('/api/' + this.resourceName + '/' + resource._id)
+	        .then(handleSuccess(callback), handleFailure(callback));
+	    };
+
+	    Resource.prototype.remove = function(resource, callback) {
+	      $http.delete('/api/' + this.resourceName + '/' + resource._id)
+	        .then(handleSuccess(callback), handleFailure(callback));
+	    };
+
+	    return function(resourceName) {
+	      return new Resource(resourceName);
 	    };
 	  }]);
 	};
 
 /***/ },
 /* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function(app) {
+	  __webpack_require__(7)(app);
+	};
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	// the $scope string in front of the function allows it to be uglified
+	// without causing problems
+	module.exports = function(app) {
+	  app.controller('ipsController', ['$scope', 'Resource', '$http', function($scope, Resource, $http) {
+	    $scope.greeting = 'stranger';
+	    $scope.ips = [];
+	    var ipResource = Resource('ips');
+
+	    $scope.getAll = function() {
+	      ipResource.getAll(function(err, data) {
+	        if (err) return console.log(err);
+	        $scope.ips = data;
+	      });
+	    };
+
+	    // These functions don't necessarily make sense for this app, but for
+	    // the sake of proving concepts they are included.
+	    $scope.createIp = function(ip) {
+	      ipResource.create(ip, function(err, data) {
+	        if (err) return console.log(err);
+	        $scope.newIp = null;
+	        $scope.ips.push(data);
+	      });
+	    };
+
+	    $scope.updateIp = function(ip) {
+	      ipResource.update(ip, function(err) {
+	        ip.editing = false;
+	        if (err) return console.log(err);
+	      });
+	    };
+
+	    $scope.removeIp = function(ip) {
+	      ipResource.remove(ip, function(err) {
+	        if (err) return console.log(err);
+	        $scope.ips.splice($scope.ips.indexOf(ip), 1);
+	      });
+	    };
+	  }]);
+	};
+
+/***/ },
+/* 8 */
 /***/ function(module, exports) {
 
 	/**
@@ -31507,6 +31551,66 @@
 
 	})(window, window.angular);
 
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(2);
+
+	describe('resource service', function() {
+	  beforeEach(angular.mock.module('ipsApp'));
+
+	  var ResourceService;
+	  var $httpBackend;
+	  var ipsResource;
+	  beforeEach(angular.mock.inject(function(Resource, _$httpBackend_) {
+	    ResourceService = Resource;
+	    $httpBackend = _$httpBackend_;
+	    ipsResource = ResourceService('ips');
+	  }));
+
+	  afterEach(function() {
+	    $httpBackend.verifyNoOutstandingExpectation();
+	    $httpBackend.verifyNoOutstandingRequest();
+	  });
+
+	  it('should make a get requests', function() {
+	    $httpBackend.expectGET('/api/ips').respond(200, [{ipAddress: 'test ip', _id:1}]);
+	    ipsResource.getAll(function(err, data) {
+	      expect(err).toBe(null);
+	      expect(Array.isArray(data)).toBe(true);
+	    });
+	    $httpBackend.flush();
+	  });
+
+	  it('should create new ips', function() {
+	    $httpBackend.expectPOST('/api/ips').respond(200, {ipAddress: 'create test', _id:1});
+	    ipsResource.create({ipAddress: 'create test',_id: 1}, function(err, data) {
+	      expect(err).toBe(null);
+	      expect(data.ipAddress).toBe('create test');
+	    });
+	    $httpBackend.flush();
+	  });
+
+	  it('should update an existing resource', function() {
+	    $httpBackend.expectPUT('/api/ips/1').respond(200, {ipAddress: 'put test', _id: 1});
+	    ipsResource.update({ipAddress: 'put test', _id: 1}, function(err, data) {
+	      expect(err).toBe(null);
+	      expect(data.ipAddress).toBe('put test');
+	    });
+	    $httpBackend.flush();
+	  });
+
+	  it('should delete a resource', function() {
+	    $httpBackend.expectDELETE('/api/ips/1').respond(200, {ipAddress: 'delete test', _id: 1});
+	    ipsResource.remove({ipAddress: 'delete test', _id: 1}, function(err, data) {
+	      expect(err).toBe(null);
+	      expect(data.ipAddress).toBe('delete test');
+	    });
+	    $httpBackend.flush();
+	  });
+	});
 
 /***/ }
 /******/ ]);

@@ -1,56 +1,41 @@
 // the $scope string in front of the function allows it to be uglified
 // without causing problems
 module.exports = function(app) {
-  app.controller('ipsController', ['$scope', '$http', function($scope, $http) {
+  app.controller('ipsController', ['$scope', 'Resource', '$http', function($scope, Resource, $http) {
     $scope.greeting = 'stranger';
     $scope.ips = [];
+    var ipResource = Resource('ips');
 
     $scope.getAll = function() {
-      $http.get('/api/ips')
-        //takes a callback for success, then a callback for failure
-        .then(function(res) {
-          $scope.ips = res.data;
-        }, function(res) {
-          console.log(res);
-        });
+      ipResource.getAll(function(err, data) {
+        if (err) return console.log(err);
+        $scope.ips = data;
+      });
     };
 
     // These functions don't necessarily make sense for this app, but for
     // the sake of proving concepts they are included.
     $scope.createIp = function(ip) {
-      $http.post('/api/ips', ip)
-        .then(function(res) {
-          $scope.ips.push(res.data);
-          $scope.newIp = null;
-        }, function(res) {
-          console.log(res);
-        });
+      ipResource.create(ip, function(err, data) {
+        if (err) return console.log(err);
+        $scope.newIp = null;
+        $scope.ips.push(data);
+        debugger;
+      });
     };
 
     $scope.updateIp = function(ip) {
-      // use css on pending to give users instant feedback that something
-      // is happening
-      ip.status = 'pending';
-      $http.put('/api/ips/' + ip._id, ip)
-        .then(function(res) {
-          delete ip.status;
-          ip.editing = false;
-        }, function(res) {
-          console.log(res);
-          ip.status = 'failed';
-          ip.editing = false;
-        });
+      ipResource.update(ip, function(err) {
+        ip.editing = false;
+        if (err) return console.log(err);
+      });
     };
 
     $scope.removeIp = function(ip) {
-      ip.status = 'pending';
-      $http.delete('/api/ips/' + ip._id)
-        .then(function() {
-          $scope.ips.splice($scope.ips.indexOf(ip), 1);
-        }, function(res) {
-          ip.status = 'failed';
-          console.log(res);
-        });
+      ipResource.remove(ip, function(err) {
+        if (err) return console.log(err);
+        $scope.ips.splice($scope.ips.indexOf(ip), 1);
+      });
     };
   }]);
 };
