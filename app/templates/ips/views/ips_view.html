@@ -1,0 +1,29 @@
+<section data-ng-controller="ipsController" data-ng-init="getAll()">
+  <h1>Hello, {{greeting}}!</h1>
+  <input type="text" data-ng-model="greeting">
+  <p>This is an app that returns the ip addresses of people who visit.
+    Doesn't that sound super safe and secure?</p>
+
+  <h1>Ip Visits:</h1>
+  <div data-ip-form save="createIp(ip)" data-ip="newIp"
+       data-label-text="New Ip" data-button-text="Frame your friends!">
+  </div> 
+
+  <ul id="ipslist">
+    <li class="{{ip.status}}" data-ng-repeat="ip in ips">
+      <span data-ng-if="!ip.editing" data-ng-init="ip.ipOriginal = ip.ipAddress">{{ip.ipAddress}} Visits: {{ip.visits}}
+        <button data-ng-click="ip.editing = true">
+          Edit
+        </button>
+        <button data-ng-click="removeIp(ip)">Delete</button>
+      </span>
+
+      <div data-ip-form data-ng-if="ip.editing" data-label-text="Edit Ip"
+           data-button-text="Save Changes" data-ip="ip" data-save="updatIp(ip)">
+      </div>
+      <button data-ng-if="ip.editing" data-ng-click="ip.editing = false; ip.ipAddress = ip.ipOriginal">
+        X
+      </button>
+    </li>
+  </ul>
+</section>

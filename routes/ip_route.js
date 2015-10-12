@@ -4,8 +4,9 @@ var ipLogger = require(__dirname + "/../lib/ip_logger");
 var jsonParser = require('body-parser').json();
 var ipRoute = module.exports = exports = express.Router();
 var handleError = require(__dirname + "/../lib/handel_error");
+var eatAuth = require(__dirname + '/../lib/eat_auth');
 
-ipRoute.get('/ips', function(req, res) {
+ipRoute.get('/ips', jsonParser, eatAuth, function(req, res) {
   ipLogger(req, res, function(req, res) {
     Ip.find({}, function(err, docs) {
       if (err) return handleError(err, docs);
@@ -14,8 +15,7 @@ ipRoute.get('/ips', function(req, res) {
   });
 });
 
-ipRoute.post('/ips', jsonParser, function(req, res) {
-  debugger;
+ipRoute.post('/ips', jsonParser, eatAuth, function(req, res) {
   var newIp = new Ip(req.body);
   newIp.save(function(err, data) {
     if (err) return handleError(err, res);
@@ -23,7 +23,7 @@ ipRoute.post('/ips', jsonParser, function(req, res) {
   });
 });
 
-ipRoute.put('/ips/:id', jsonParser, function(req, res) {
+ipRoute.put('/ips/:id', jsonParser, eatAuth, function(req, res) {
   var newIpBody = req.body;
   delete newIpBody._id;
   Ip.update({_id: req.params.id}, newIpBody, function(err, data) {
@@ -32,7 +32,7 @@ ipRoute.put('/ips/:id', jsonParser, function(req, res) {
   });
 });
 
-ipRoute.delete('/ips/:id', function(req, res) {
+ipRoute.delete('/ips/:id', jsonParser, eatAuth, function(req, res) {
   Ip.remove({_id: req.params.id}, function(err) {
     if (err) return handleError(err, res);
     res.json({msg: 'success'});
