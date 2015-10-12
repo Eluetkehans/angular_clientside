@@ -45,14 +45,14 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	__webpack_require__(9);
+	__webpack_require__(10);
 
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(2);
-	__webpack_require__(8);
+	__webpack_require__(9);
 
 	describe('ips controller', function() {
 	  var $httpBackend;
@@ -104,7 +104,7 @@
 
 	    it('should be able to update an existing ip', function() {
 	      $scope.ips[0] = {_id: 1, ipAddress: 'updated ip'};
-	      $httpBackend.expectPUT('/api/ips/1', {_id: 1, ipAddress: 'updated ip', status: 'pending'})
+	      $httpBackend.expectPUT('/api/ips/1', {_id: 1, ipAddress: 'updated ip'})
 	        .respond(200, {_id: 1, ipAddress: 'updated ip'});
 	      $scope.updateIp({_id: 1, ipAddress: 'updated ip'});
 	      $httpBackend.flush();
@@ -28998,7 +28998,7 @@
 	    };
 
 	    Resource.prototype.create = function(resource, callback) {
-	      $http.post('/api/' + this.resourceName)
+	      $http.post('/api/' + this.resourceName, resource)
 	        .then(handleSuccess(callback), handleFailure(callback));
 	    };
 
@@ -29008,7 +29008,7 @@
 	    };
 
 	    Resource.prototype.update = function(resource, callback) {
-	      $http.put('/api/' + this.resourceName + '/' + resource._id)
+	      $http.put('/api/' + this.resourceName + '/' + resource._id, resource)
 	        .then(handleSuccess(callback), handleFailure(callback));
 	    };
 
@@ -29029,6 +29029,7 @@
 
 	module.exports = function(app) {
 	  __webpack_require__(7)(app);
+	  __webpack_require__(8)(app);
 	};
 
 /***/ },
@@ -29057,6 +29058,7 @@
 	        if (err) return console.log(err);
 	        $scope.newIp = null;
 	        $scope.ips.push(data);
+	        debugger;
 	      });
 	    };
 
@@ -29078,6 +29080,29 @@
 
 /***/ },
 /* 8 */
+/***/ function(module, exports) {
+
+	module.exports = function(app) {
+	  app.directive('ipForm', function() {
+	    return {
+	      restrict: 'AC',
+	      replace: true,
+	      templateUrl: '/templates/ips/directives/ip_form_template.html',
+	      scope: {
+	        labelText: '@',
+	        buttonText: '@',
+	        ip: '=',
+	        save: '&'
+	      },
+	      controller: function($scope) {
+	        console.log($scope.save);
+	      }
+	    };
+	  });
+	};
+
+/***/ },
+/* 9 */
 /***/ function(module, exports) {
 
 	/**
@@ -31553,7 +31578,7 @@
 
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(2);

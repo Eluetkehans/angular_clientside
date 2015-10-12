@@ -17,15 +17,15 @@ describe('the ips resource', function() {
     });
   });
 
-  // it('should retrieve ips', function(done) {
-    // chai.request(url)
-    //   .get('/ip')
-    //   .end(function(err, res) {
-    //     expect(err).to.eql(null);
-    //     expect(Array.isArray(res.body)).to.eql(true);
-    //     done();
-    //   });
-  // });
+  it('should retrieve ips', function(done) {
+    chai.request(url)
+      .get('/ip')
+      .end(function(err, res) {
+        expect(err).to.eql(null);
+        expect(Array.isArray(res.body)).to.eql(true);
+        done();
+      });
+  });
   describe('db return', function() {
     before(function(done) {
       var newIp = new Ip();

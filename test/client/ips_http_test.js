@@ -51,7 +51,7 @@ describe('ips controller', function() {
 
     it('should be able to update an existing ip', function() {
       $scope.ips[0] = {_id: 1, ipAddress: 'updated ip'};
-      $httpBackend.expectPUT('/api/ips/1', {_id: 1, ipAddress: 'updated ip', status: 'pending'})
+      $httpBackend.expectPUT('/api/ips/1', {_id: 1, ipAddress: 'updated ip'})
         .respond(200, {_id: 1, ipAddress: 'updated ip'});
       $scope.updateIp({_id: 1, ipAddress: 'updated ip'});
       $httpBackend.flush();
