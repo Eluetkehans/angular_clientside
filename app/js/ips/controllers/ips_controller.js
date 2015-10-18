@@ -26,7 +26,6 @@ module.exports = function(app) {
         if (err) return console.log(err);
         $scope.newIp = null;
         $scope.ips.push(data);
-        debugger;
       });
     };
 

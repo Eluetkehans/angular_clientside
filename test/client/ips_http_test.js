@@ -46,7 +46,7 @@ describe('ips controller', function() {
       $scope.createIp({ipAddress: 'send test ip'});
       $httpBackend.flush();
       expect($scope.ips[0].ipAddress).toBe('test ip');
-      expect($scope.newIp).toBe({});
+      expect($scope.newIp).toBe(null);
     });
 
     it('should be able to update an existing ip', function() {

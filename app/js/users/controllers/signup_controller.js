@@ -22,7 +22,7 @@ module.exports = function(app) {
         .then(function(res) {
           $cookies.put('eat', res.data.token);
           $scope.getUserName();
-          $location.path('/notes');
+          $location.path('/ips');
         }, function(res) {
           console.log(res);
         });
